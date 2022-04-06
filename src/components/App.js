@@ -9,7 +9,7 @@ const App = () => {
     <button data-testid='start-btn'>start</button>
     <button data-testid='stop-btn'>Stop</button>
     <button data-testid='reset-btn'>Reset</button>
-    <input data-testid='work-duration'>25:00</input>
+    <input data-testid='work-duration'></input>
     <input data-testid='break-duration'></input>
     <button data-testid='set-btn'>Set</button>
     </div>
