@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import '../styles/App.css';
+import "../styles/App.css";
 
 const App = () => {
   const [workDuration, setWorkDuration] = useState(25);
@@ -40,7 +40,7 @@ const App = () => {
   };
 
   const handleTimerEnd = () => {
-    alert(`Time's up! ${isWorkTime ? 'Take a break!' : 'Get back to work!'}`);
+    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
     setIsWorkTime(!isWorkTime);
   };
 
@@ -65,18 +65,18 @@ const App = () => {
   return (
     <>
       <div id="main">
-        <h1>{isWorkTime ? 'Work-Time' : 'Break-Time'}</h1>
-        <button data-testid='start-btn' onClick={startTimer} disabled={startButtonDisabled}>
+        <h1>{isWorkTime ? "Work-Time" : "Break-Time"}</h1>
+        <button data-testid="start-btn" onClick={startTimer} disabled={startButtonDisabled}>
           Start
         </button>
-        <button data-testid='stop-btn' onClick={stopTimer} disabled={!isRunning}>
+        <button data-testid="stop-btn" onClick={stopTimer} disabled={!isRunning}>
           Stop
         </button>
-        <button data-testid='reset-btn' onClick={resetTimer} disabled={resetButtonDisabled}>
+        <button data-testid="reset-btn" onClick={resetTimer} disabled={resetButtonDisabled}>
           Reset
         </button>
         <input
-          data-testid='work-duration'
+          data-testid="work-duration"
           type="number"
           min="1"
           defaultValue={workDuration}
@@ -84,19 +84,19 @@ const App = () => {
           placeholder="Work Duration (minutes)"
         />
         <input
-          data-testid='break-duration'
+          data-testid="break-duration"
           type="number"
           min="1"
           defaultValue={breakDuration}
           disabled={inputFieldsDisabled}
           placeholder="Break Duration (minutes)"
         />
-        <button data-testid='set-btn' onClick={setDurations} disabled={setButtonDisabled}>
+        <button data-testid="set-btn" onClick={setDurations} disabled={setButtonDisabled}>
           Set
         </button>
         <div data-testid="timer">{`${Math.floor(time / 60)
           .toString()
-          .padStart(2, '0')}:${(time % 60).toString().padStart(2, '0')}`}</div>
+          .padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`}</div>
       </div>
     </>
   );
