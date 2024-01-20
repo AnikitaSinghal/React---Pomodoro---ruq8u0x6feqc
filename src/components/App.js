@@ -1,101 +1,104 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/App.css";
 
 const App = () => {
   const [workDuration, setWorkDuration] = useState(25);
   const [breakDuration, setBreakDuration] = useState(5);
-  const [timer, setTimer] = useState(null);
-  const [isWorkTime, setIsWorkTime] = useState(true);
+  const [time, setTime] = useState(workDuration * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const [isWorkTime, setIsWorkTime] = useState(true);
+
+  const intervalRef = useRef();
 
   useEffect(() => {
-    resetClock();
-  }, [workDuration, breakDuration]);
+    setTime(isWorkTime ? workDuration * 60 : breakDuration * 60);
+  }, [workDuration, breakDuration, isWorkTime]);
 
-  const startClock = () => {
+  const startTimer = () => {
     setIsRunning(true);
-    setTimer(
-      setInterval(() => {
-        if (isWorkTime) {
-          if (workDuration > 0) {
-            setWorkDuration((prev) => prev - 1);
-          } else {
-            setIsWorkTime(false);
-            setBreakDuration(5); // Reset break duration
-          }
+    intervalRef.current = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime === 0) {
+          handleTimerEnd();
+          return isWorkTime ? breakDuration * 60 : workDuration * 60;
         } else {
-          if (breakDuration > 0) {
-            setBreakDuration((prev) => prev - 1);
-          } else {
-            setIsWorkTime(true);
-            setWorkDuration(25); // Reset work duration
-          }
+          return prevTime - 1;
         }
-      }, 1000)
-    );
+      });
+    }, 1000);
   };
 
-  const stopClock = () => {
-    clearInterval(timer);
+  const stopTimer = () => {
     setIsRunning(false);
+    clearInterval(intervalRef.current);
   };
 
-  const resetClock = () => {
-    clearInterval(timer);
-    setIsRunning(false);
+  const resetTimer = () => {
+    stopTimer();
     setIsWorkTime(true);
-    setWorkDuration(25);
-    setBreakDuration(5);
+    setTime(workDuration * 60);
   };
 
-  const handleStart = () => {
-    startClock();
+  const handleTimerEnd = () => {
+    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
+    setIsWorkTime(!isWorkTime);
   };
 
-  const handleStop = () => {
-    stopClock();
+  const setDurations = () => {
+    stopTimer();
+    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value) || 25);
+    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value) || 5);
+
+    setWorkDuration(newWorkDuration);
+    setBreakDuration(newBreakDuration);
   };
 
-  const handleReset = () => {
-    resetClock();
+  const isInputValid = (value) => {
+    return !isNaN(value) && value >= 0;
   };
+
+  const startButtonDisabled = !isInputValid(workDuration) || !isInputValid(breakDuration) || isRunning;
+  const resetButtonDisabled = !isRunning;
+  const setButtonDisabled = isRunning;
+  const inputFieldsDisabled = isRunning;
 
   return (
-    <div id="main">
-      <h1>{isWorkTime ? "Work-Time" : "Break-Time"}</h1>
-      <button data-testid="start-btn" onClick={handleStart} disabled={isRunning}>
-        Start
-      </button>
-      <button data-testid="stop-btn" onClick={handleStop} disabled={!isRunning}>
-        Stop
-      </button>
-      <button data-testid="reset-btn" onClick={handleReset} disabled={isRunning}>
-        Reset
-      </button>
-      <input
-        type="number"
-        data-testid="work-duration"
-        value={workDuration}
-        onChange={(e) => setWorkDuration(Math.max(0, parseInt(e.target.value, 10)))}
-        disabled={isRunning}
-      />
-      <input
-        type="number"
-        data-testid="break-duration"
-        value={breakDuration}
-        onChange={(e) => setBreakDuration(Math.max(0, parseInt(e.target.value, 10)))}
-        disabled={isRunning}
-      />
-      <button
-        data-testid="set-btn"
-        onClick={() => {
-          if (!isRunning) startClock();
-        }}
-        disabled={isRunning}
-      >
-        Set
-      </button>
-    </div>
+    <>
+      <div id="main">
+        <h1>{isWorkTime ? "Work-Time" : "Break-Time"}</h1>
+        <button data-testid="start-btn" onClick={startTimer} disabled={startButtonDisabled}>
+          Start
+        </button>
+        <button data-testid="stop-btn" onClick={stopTimer} disabled={!isRunning}>
+          Stop
+        </button>
+        <button data-testid="reset-btn" onClick={resetTimer} disabled={resetButtonDisabled}>
+          Reset
+        </button>
+        <input
+          data-testid="work-duration"
+          type="number"
+          min="1"
+          defaultValue={workDuration}
+          disabled={inputFieldsDisabled}
+          placeholder="Work Duration (minutes)"
+        />
+        <input
+          data-testid="break-duration"
+          type="number"
+          min="1"
+          defaultValue={breakDuration}
+          disabled={inputFieldsDisabled}
+          placeholder="Break Duration (minutes)"
+        />
+        <button data-testid="set-btn" onClick={setDurations} disabled={setButtonDisabled}>
+          Set
+        </button>
+        <div data-testid="timer">{`${Math.floor(time / 60)
+          .toString()
+          .padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`}</div>
+      </div>
+    </>
   );
 };
 
