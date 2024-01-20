@@ -58,6 +58,8 @@ const App = () => {
 
   const startButtonDisabled = !isInputValid(workDuration) || !isInputValid(breakDuration) || isRunning;
   const resetButtonDisabled = !isRunning;
+  const setButtonDisabled = isRunning;
+  const inputFieldsDisabled = isRunning;
 
   return (
     <>
@@ -77,7 +79,7 @@ const App = () => {
           type="number"
           min="1"
           defaultValue={workDuration}
-          disabled={isRunning}
+          disabled={inputFieldsDisabled}
           placeholder="Work Duration (minutes)"
         />
         <input
@@ -85,10 +87,10 @@ const App = () => {
           type="number"
           min="1"
           defaultValue={breakDuration}
-          disabled={isRunning}
+          disabled={inputFieldsDisabled}
           placeholder="Break Duration (minutes)"
         />
-        <button data-testid='set-btn' onClick={setDurations} disabled={isRunning}>
+        <button data-testid='set-btn' onClick={setDurations} disabled={setButtonDisabled}>
           Set
         </button>
       </div>
