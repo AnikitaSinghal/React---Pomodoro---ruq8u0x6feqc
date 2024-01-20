@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import '../styles/App.css';
 
 const App = () => {
@@ -9,6 +9,10 @@ const App = () => {
   const [isWorkTime, setIsWorkTime] = useState(true);
 
   const intervalRef = useRef();
+
+  useEffect(() => {
+    setTime(isWorkTime ? workDuration * 60 : breakDuration * 60);
+  }, [workDuration, breakDuration, isWorkTime]);
 
   const startTimer = () => {
     setIsRunning(true);
@@ -31,8 +35,8 @@ const App = () => {
 
   const resetTimer = () => {
     stopTimer();
-    setTime(workDuration * 60);
     setIsWorkTime(true);
+    setTime(workDuration * 60);
   };
 
   const handleTimerEnd = () => {
@@ -47,9 +51,6 @@ const App = () => {
 
     setWorkDuration(newWorkDuration);
     setBreakDuration(newBreakDuration);
-
-    setTime(newWorkDuration * 60);
-    setIsWorkTime(true);
   };
 
   const isInputValid = (value) => {
@@ -93,6 +94,9 @@ const App = () => {
         <button data-testid='set-btn' onClick={setDurations} disabled={setButtonDisabled}>
           Set
         </button>
+        <div data-testid="timer">{`${Math.floor(time / 60)
+          .toString()
+          .padStart(2, '0')}:${(time % 60).toString().padStart(2, '0')}`}</div>
       </div>
     </>
   );
