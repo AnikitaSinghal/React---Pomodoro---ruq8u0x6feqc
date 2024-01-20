@@ -42,9 +42,13 @@ const App = () => {
 
   const setDurations = () => {
     stopTimer();
-    setWorkDuration(Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value) || 25));
-    setBreakDuration(Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value) || 5));
-    setTime(workDuration * 60);
+    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value) || 25);
+    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value) || 5);
+
+    setWorkDuration(newWorkDuration);
+    setBreakDuration(newBreakDuration);
+
+    setTime(newWorkDuration * 60);
     setIsWorkTime(true);
   };
 
