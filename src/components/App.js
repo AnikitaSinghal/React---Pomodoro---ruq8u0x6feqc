@@ -52,21 +52,42 @@ const App = () => {
     setIsWorkTime(true);
   };
 
+  const isInputValid = (value) => {
+    return !isNaN(value) && value >= 0;
+  };
+
+  const startButtonDisabled = !isInputValid(workDuration) || !isInputValid(breakDuration) || isRunning;
+  const resetButtonDisabled = !isRunning;
+
   return (
     <>
       <div id="main">
         <h1>{isWorkTime ? 'Work-Time' : 'Break-Time'}</h1>
-        <button data-testid='start-btn' onClick={startTimer} disabled={isRunning}>
+        <button data-testid='start-btn' onClick={startTimer} disabled={startButtonDisabled}>
           Start
         </button>
         <button data-testid='stop-btn' onClick={stopTimer} disabled={!isRunning}>
           Stop
         </button>
-        <button data-testid='reset-btn' onClick={resetTimer} disabled={isRunning}>
+        <button data-testid='reset-btn' onClick={resetTimer} disabled={resetButtonDisabled}>
           Reset
         </button>
-        <input data-testid='work-duration' type="number" min="1" defaultValue={workDuration} disabled={isRunning} />
-        <input data-testid='break-duration' type="number" min="1" defaultValue={breakDuration} disabled={isRunning} />
+        <input
+          data-testid='work-duration'
+          type="number"
+          min="1"
+          defaultValue={workDuration}
+          disabled={isRunning}
+          placeholder="Work Duration (minutes)"
+        />
+        <input
+          data-testid='break-duration'
+          type="number"
+          min="1"
+          defaultValue={breakDuration}
+          disabled={isRunning}
+          placeholder="Break Duration (minutes)"
+        />
         <button data-testid='set-btn' onClick={setDurations} disabled={isRunning}>
           Set
         </button>
