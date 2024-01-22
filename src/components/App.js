@@ -45,8 +45,8 @@ const App = () => {
   };
 
   const setDurations = () => {
-    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10) || 25);
-    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10) || 5);
+    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
+    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
 
     if (newWorkDuration === 0 && newBreakDuration === 0) {
       // If both durations are zero, set default values
