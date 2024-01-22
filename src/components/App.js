@@ -11,7 +11,7 @@ const App = () => {
   const intervalRef = useRef();
 
   useEffect(() => {
-    setTime(isWorkTime ? workDuration * 60 : breakDuration * 60);
+    setTime((isWorkTime ? workDuration : breakDuration) * 60);
   }, [workDuration, breakDuration, isWorkTime]);
 
   const startTimer = () => {
