@@ -45,12 +45,17 @@ const App = () => {
   };
 
   const setDurations = () => {
-    stopTimer();
-    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value) || 25);
-    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value) || 5);
+    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10) || 25);
+    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10) || 5);
 
-    setWorkDuration(newWorkDuration);
-    setBreakDuration(newBreakDuration);
+    if (newWorkDuration === 0 && newBreakDuration === 0) {
+      // If both durations are zero, set default values
+      setWorkDuration(25);
+      setBreakDuration(5);
+    } else {
+      setWorkDuration(newWorkDuration);
+      setBreakDuration(newBreakDuration);
+    }
   };
 
   const isInputValid = (value) => {
@@ -79,7 +84,7 @@ const App = () => {
           data-testid="work-duration"
           type="number"
           min="1"
-          defaultValue={workDuration}
+          value={workDuration}
           disabled={inputFieldsDisabled}
           placeholder="Work Duration (minutes)"
         />
@@ -87,7 +92,7 @@ const App = () => {
           data-testid="break-duration"
           type="number"
           min="1"
-          defaultValue={breakDuration}
+          value={breakDuration}
           disabled={inputFieldsDisabled}
           placeholder="Break Duration (minutes)"
         />
