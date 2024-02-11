@@ -28,12 +28,11 @@ const App = () => {
     }, 1000);
   };
 
- const stopTimer = () => {
+const stopTimer = () => {
   setIsRunning(false);
   clearInterval(intervalRef.current);
   // Enable start-button and reset-button
 };
-
 
  const resetTimer = () => {
   stopTimer();
@@ -42,7 +41,7 @@ const App = () => {
 };
 
 
- const handleTimerEnd = () => {
+const handleTimerEnd = () => {
   alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
   setIsWorkTime(!isWorkTime);
 };
