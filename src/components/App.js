@@ -41,7 +41,7 @@ const App = () => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
     setStartButtonDisabled(false);
-    setResetButtonDisabled(true);
+    setResetButtonDisabled(false);
     setInputFieldsDisabled(false);
     setSetButtonDisabled(false);
   };
@@ -64,13 +64,16 @@ const App = () => {
     const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
     const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
 
-    if (newWorkDuration === 0 && newBreakDuration === 0) {
-      setWorkDuration(25);
-      setBreakDuration(5);
-    } else {
-      setWorkDuration(newWorkDuration);
-      setBreakDuration(newBreakDuration);
+    if (newWorkDuration === 0 || newBreakDuration === 0) {
+      alert("Work and break durations cannot be set to zero simultaneously.");
+      return;
     }
+
+    setWorkDuration(newWorkDuration);
+    setBreakDuration(newBreakDuration);
+    setStartButtonDisabled(false);
+    setResetButtonDisabled(true);
+    setSetButtonDisabled(false);
   };
 
   return (
