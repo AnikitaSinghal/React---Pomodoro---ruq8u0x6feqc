@@ -32,7 +32,10 @@ const stopTimer = () => {
   setIsRunning(false);
   clearInterval(intervalRef.current);
   // Enable start-button and reset-button
+  setStartButtonDisabled(false);
+  setResetButtonDisabled(false);
 };
+
 
  const resetTimer = () => {
   stopTimer();
@@ -40,14 +43,12 @@ const stopTimer = () => {
   setTime(workDuration * 60);
 };
 
-
-const handleTimerEnd = () => {
+  const handleTimerEnd = () => {
   alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
   setIsWorkTime(!isWorkTime);
 };
 
-
- const setDurations = () => {
+const setDurations = () => {
   const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
   const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
 
@@ -60,7 +61,6 @@ const handleTimerEnd = () => {
     setBreakDuration(newBreakDuration);
   }
 };
-
 
   const isInputValid = (value) => {
     return !isNaN(value) && value >= 0;
