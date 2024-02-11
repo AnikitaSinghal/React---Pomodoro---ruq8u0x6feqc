@@ -7,57 +7,41 @@ const App = () => {
   const [time, setTime] = useState(workDuration * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
-  const [startButtonDisabled, setStartButtonDisabled] = useState(false);
-  const [resetButtonDisabled, setResetButtonDisabled] = useState(true);
-  const [setButtonDisabled, setSetButtonDisabled] = useState(false);
-  const [inputFieldsDisabled, setInputFieldsDisabled] = useState(false);
 
   const intervalRef = useRef();
 
   useEffect(() => {
-    setTime(isWorkTime ? workDuration * 60 : breakDuration * 60);
+    setTime((isWorkTime ? workDuration : breakDuration) * 60);
   }, [workDuration, breakDuration, isWorkTime]);
+
+  useEffect(() => {
+    if (time === 0) {
+      handleTimerEnd();
+    }
+  }, [time]);
 
   const startTimer = () => {
     setIsRunning(true);
-    setStartButtonDisabled(true);
-    setResetButtonDisabled(false);
-    setSetButtonDisabled(true);
-    setInputFieldsDisabled(true);
-
     intervalRef.current = setInterval(() => {
-      setTime((prevTime) => {
-        if (prevTime === 0) {
-          handleTimerEnd();
-          return isWorkTime ? breakDuration * 60 : workDuration * 60;
-        } else {
-          return prevTime - 1;
-        }
-      });
+      setTime((prevTime) => prevTime - 1);
     }, 1000);
   };
 
   const stopTimer = () => {
     setIsRunning(false);
     clearInterval(intervalRef.current);
-    setStartButtonDisabled(false);
-    setResetButtonDisabled(false);
-    setInputFieldsDisabled(false);
-    setSetButtonDisabled(false);
   };
 
   const resetTimer = () => {
     stopTimer();
     setIsWorkTime(true);
     setTime(workDuration * 60);
-    setStartButtonDisabled(false);
-    setResetButtonDisabled(true);
-    setSetButtonDisabled(false);
   };
 
   const handleTimerEnd = () => {
-    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
     setIsWorkTime(!isWorkTime);
+    setTime((isWorkTime ? breakDuration : workDuration) * 60);
+    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
   };
 
   const setDurations = () => {
@@ -71,22 +55,18 @@ const App = () => {
 
     setWorkDuration(newWorkDuration);
     setBreakDuration(newBreakDuration);
-    setStartButtonDisabled(false);
-    setResetButtonDisabled(true);
-    setInputFieldsDisabled(false);
-    setSetButtonDisabled(false);
   };
 
   return (
     <div id="main">
       <h1>{isWorkTime ? "Work-Time" : "Break-Time"}</h1>
-      <button data-testid="start-btn" onClick={startTimer} disabled={startButtonDisabled}>
+      <button data-testid="start-btn" onClick={startTimer} disabled={isRunning}>
         Start
       </button>
       <button data-testid="stop-btn" onClick={stopTimer} disabled={!isRunning}>
         Stop
       </button>
-      <button data-testid="reset-btn" onClick={resetTimer} disabled={resetButtonDisabled}>
+      <button data-testid="reset-btn" onClick={resetTimer}>
         Reset
       </button>
       <input
@@ -95,7 +75,6 @@ const App = () => {
         min="1"
         value={workDuration}
         onChange={(e) => setWorkDuration(Math.max(1, parseInt(e.target.value, 10)))}
-        disabled={inputFieldsDisabled}
         placeholder="Work Duration (minutes)"
       />
       <input
@@ -104,10 +83,9 @@ const App = () => {
         min="1"
         value={breakDuration}
         onChange={(e) => setBreakDuration(Math.max(1, parseInt(e.target.value, 10)))}
-        disabled={inputFieldsDisabled}
         placeholder="Break Duration (minutes)"
       />
-      <button data-testid="set-btn" onClick={setDurations} disabled={setButtonDisabled}>
+      <button data-testid="set-btn" onClick={setDurations}>
         Set
       </button>
       <div data-testid="timer">{`${Math.floor(time / 60)
