@@ -7,6 +7,10 @@ const App = () => {
   const [time, setTime] = useState(workDuration * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
+  const [startButtonDisabled, setStartButtonDisabled] = useState(false);
+  const [resetButtonDisabled, setResetButtonDisabled] = useState(true);
+  const [setButtonDisabled, setSetButtonDisabled] = useState(false);
+  const [inputFieldsDisabled, setInputFieldsDisabled] = useState(false);
 
   const intervalRef = useRef();
 
@@ -16,6 +20,11 @@ const App = () => {
 
   const startTimer = () => {
     setIsRunning(true);
+    setStartButtonDisabled(true);
+    setResetButtonDisabled(false);
+    setSetButtonDisabled(true);
+    setInputFieldsDisabled(true);
+
     intervalRef.current = setInterval(() => {
       setTime((prevTime) => {
         if (prevTime === 0) {
@@ -28,48 +37,41 @@ const App = () => {
     }, 1000);
   };
 
-const stopTimer = () => {
-  setIsRunning(false);
-  clearInterval(intervalRef.current);
-  // Enable start-button and reset-button
-  setStartButtonDisabled(false);
-  setResetButtonDisabled(false);
-};
-
-
- const resetTimer = () => {
-  stopTimer();
-  setIsWorkTime(true);
-  setTime(workDuration * 60);
-};
-
-  const handleTimerEnd = () => {
-  alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
-  setIsWorkTime(!isWorkTime);
-};
-
-const setDurations = () => {
-  const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
-  const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
-
-  if (newWorkDuration === 0 && newBreakDuration === 0) {
-    // If both durations are zero, set default values
-    setWorkDuration(25);
-    setBreakDuration(5);
-  } else {
-    setWorkDuration(newWorkDuration);
-    setBreakDuration(newBreakDuration);
-  }
-};
-
-  const isInputValid = (value) => {
-    return !isNaN(value) && value >= 0;
+  const stopTimer = () => {
+    setIsRunning(false);
+    clearInterval(intervalRef.current);
+    setStartButtonDisabled(false);
+    setResetButtonDisabled(true);
+    setInputFieldsDisabled(false);
+    setSetButtonDisabled(false);
   };
 
-  const startButtonDisabled = !isInputValid(workDuration) || !isInputValid(breakDuration) || isRunning;
-  const resetButtonDisabled = !isRunning;
-  const setButtonDisabled = isRunning;
-  const inputFieldsDisabled = isRunning;
+  const resetTimer = () => {
+    stopTimer();
+    setIsWorkTime(true);
+    setTime(workDuration * 60);
+    setStartButtonDisabled(false);
+    setResetButtonDisabled(true);
+    setSetButtonDisabled(false);
+  };
+
+  const handleTimerEnd = () => {
+    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
+    setIsWorkTime(!isWorkTime);
+  };
+
+  const setDurations = () => {
+    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
+    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
+
+    if (newWorkDuration === 0 && newBreakDuration === 0) {
+      setWorkDuration(25);
+      setBreakDuration(5);
+    } else {
+      setWorkDuration(newWorkDuration);
+      setBreakDuration(newBreakDuration);
+    }
+  };
 
   return (
     <div id="main">
