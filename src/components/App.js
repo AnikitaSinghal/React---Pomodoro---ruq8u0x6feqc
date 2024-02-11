@@ -15,7 +15,7 @@ const App = () => {
   const intervalRef = useRef();
 
   useEffect(() => {
-    setTime((isWorkTime ? workDuration : breakDuration) * 60);
+    setTime(isWorkTime ? workDuration * 60 : breakDuration * 60);
   }, [workDuration, breakDuration, isWorkTime]);
 
   const startTimer = () => {
@@ -64,8 +64,8 @@ const App = () => {
     const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
     const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
 
-    if (newWorkDuration === 0 || newBreakDuration === 0) {
-      alert("Work and break durations cannot be set to zero simultaneously.");
+    if (newWorkDuration === 0 && newBreakDuration === 0) {
+      alert("Work and break durations cannot both be set to zero.");
       return;
     }
 
@@ -73,6 +73,7 @@ const App = () => {
     setBreakDuration(newBreakDuration);
     setStartButtonDisabled(false);
     setResetButtonDisabled(true);
+    setInputFieldsDisabled(false);
     setSetButtonDisabled(false);
   };
 
