@@ -7,6 +7,7 @@ const App = () => {
   const [time, setTime] = useState(workDuration * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkTime, setIsWorkTime] = useState(true);
+  const [resetButtonDisabled, setResetButtonDisabled] = useState(true);
 
   const intervalRef = useRef();
 
@@ -22,6 +23,7 @@ const App = () => {
 
   const startTimer = () => {
     setIsRunning(true);
+    setResetButtonDisabled(false);
     intervalRef.current = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
     }, 1000);
@@ -36,6 +38,7 @@ const App = () => {
     stopTimer();
     setIsWorkTime(true);
     setTime(workDuration * 60);
+    setResetButtonDisabled(true);
   };
 
   const handleTimerEnd = () => {
@@ -66,7 +69,7 @@ const App = () => {
       <button data-testid="stop-btn" onClick={stopTimer} disabled={!isRunning}>
         Stop
       </button>
-      <button data-testid="reset-btn" onClick={resetTimer}>
+      <button data-testid="reset-btn" onClick={resetTimer} disabled={resetButtonDisabled}>
         Reset
       </button>
       <input
@@ -75,6 +78,7 @@ const App = () => {
         min="1"
         value={workDuration}
         onChange={(e) => setWorkDuration(Math.max(1, parseInt(e.target.value, 10)))}
+        disabled={isRunning}
         placeholder="Work Duration (minutes)"
       />
       <input
@@ -83,9 +87,10 @@ const App = () => {
         min="1"
         value={breakDuration}
         onChange={(e) => setBreakDuration(Math.max(1, parseInt(e.target.value, 10)))}
+        disabled={isRunning}
         placeholder="Break Duration (minutes)"
       />
-      <button data-testid="set-btn" onClick={setDurations}>
+      <button data-testid="set-btn" onClick={setDurations} disabled={isRunning}>
         Set
       </button>
       <div data-testid="timer">{`${Math.floor(time / 60)
