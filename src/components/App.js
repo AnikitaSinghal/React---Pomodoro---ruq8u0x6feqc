@@ -28,35 +28,40 @@ const App = () => {
     }, 1000);
   };
 
-  const stopTimer = () => {
-    setIsRunning(false);
-    clearInterval(intervalRef.current);
-  };
+ const stopTimer = () => {
+  setIsRunning(false);
+  clearInterval(intervalRef.current);
+  // Enable start-button and reset-button
+};
 
-  const resetTimer = () => {
-    stopTimer();
-    setIsWorkTime(true);
-    setTime(workDuration * 60);
-  };
 
-  const handleTimerEnd = () => {
-    alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
-    setIsWorkTime(!isWorkTime);
-  };
+ const resetTimer = () => {
+  stopTimer();
+  setIsWorkTime(true);
+  setTime(workDuration * 60);
+};
 
-  const setDurations = () => {
-    const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
-    const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
 
-    if (newWorkDuration === 0 && newBreakDuration === 0) {
-      // If both durations are zero, set default values
-      setWorkDuration(25);
-      setBreakDuration(5);
-    } else {
-      setWorkDuration(newWorkDuration);
-      setBreakDuration(newBreakDuration);
-    }
-  };
+ const handleTimerEnd = () => {
+  alert(`Time's up! ${isWorkTime ? "Take a break!" : "Get back to work!"}`);
+  setIsWorkTime(!isWorkTime);
+};
+
+
+ const setDurations = () => {
+  const newWorkDuration = Math.max(1, parseInt(document.querySelector('[data-testid=work-duration]').value, 10)) || 25;
+  const newBreakDuration = Math.max(1, parseInt(document.querySelector('[data-testid=break-duration]').value, 10)) || 5;
+
+  if (newWorkDuration === 0 && newBreakDuration === 0) {
+    // If both durations are zero, set default values
+    setWorkDuration(25);
+    setBreakDuration(5);
+  } else {
+    setWorkDuration(newWorkDuration);
+    setBreakDuration(newBreakDuration);
+  }
+};
+
 
   const isInputValid = (value) => {
     return !isNaN(value) && value >= 0;
